@@ -3,6 +3,7 @@
 2017/05/14
 Hoon H.
 
+[![Build Status](https://travis-ci.org/eonil/prototype-eventual-navigation-controller.swift.svg?branch=master)](https://travis-ci.org/eonil/prototype-eventual-navigation-controller.swift)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 A `UINavigationController` subclass which navigates
