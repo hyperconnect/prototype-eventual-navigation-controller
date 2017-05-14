@@ -9,9 +9,15 @@
 import Foundation
 import UIKit
 
-public class EventualNavigationController: TSQNavigationController {
-    private let loopDevice = EventualViewControllerLoopDevice()
-    private var userInteractionBlocker: EventualViewControllerUserInteractionBlocker?
+///
+/// - Note:
+///     Take care that "0-view-controller in stack" is an abnormal
+///     state for an NC, so it won't give you proper animations.
+///     Anyway, it still work with no breakage.
+///
+public class EventualNavigationController: UINavigationController {
+    private let loopDevice = LoopDevice()
+    private var userInteractionBlocker: UserInteractionEventBlocker?
 
     ///
     /// User interaction becomes disabled until all queued states
@@ -26,8 +32,6 @@ public class EventualNavigationController: TSQNavigationController {
         public var stack = [UIViewController]()
         public init() {}
         public init(modal: UIViewController?, stack: [UIViewController]) {
-            assert(modal == nil || modal! is TransitionSafetyQuery)
-            assert(stack.map({ $0 is TransitionSafetyQuery }).reduce(true, { $0 && $1 }))
             self.modal = modal
             self.stack = stack
         }
@@ -36,11 +40,16 @@ public class EventualNavigationController: TSQNavigationController {
         }
     }
 
+
+
+
+
+
     ///
     /// Make and return navigation state by scanning current view state. 
     ///
     public func scan() -> State {
-        return .init(modal: presentedViewController, stack: Array(viewControllers.dropFirst()))
+        return .init(modal: presentedViewController, stack: viewControllers)
     }
 
 
@@ -57,7 +66,7 @@ public class EventualNavigationController: TSQNavigationController {
         loopDevice.isRunning = true
     }
     private func stepSyncLoop() {
-        userInteractionBlocker = (userInteractionBlocker ?? EventualViewControllerUserInteractionBlocker())
+        userInteractionBlocker = (userInteractionBlocker ?? UserInteractionEventBlocker())
         while hasArrivedToFinalState() {
             guard queue.first != nil else {
                 pauseSyncLoop()
@@ -71,7 +80,7 @@ public class EventualNavigationController: TSQNavigationController {
         guard rootViewControllerSafetyQuery.isSafeToParticipateInTransition else { return }
         if state.modal !== presentedViewController {
             if let vc = presentedViewController {
-                EventualViewControllerLog.testAndLogWarningOnFailure(vc.presentingViewController == self, "There's a modal VC presented by other VC... Waiting for the VC to be dismissed...")
+                LogDevice.testAndLogWarningOnFailure(vc.presentingViewController == self, "There's a modal VC presented by other VC... Waiting for the VC to be dismissed...")
                 guard vc.presentingViewController == self else { return }
                 if isSafeToDismissModal {
                     dismiss(animated: true, completion: nil)
@@ -86,8 +95,8 @@ public class EventualNavigationController: TSQNavigationController {
                 }
             }
         }
-        if state.stack != Array(viewControllers.dropFirst()) {
-            setViewControllers([viewControllers[0]] + state.stack, animated: true)
+        if state.stack != viewControllers {
+            setViewControllers(state.stack, animated: true)
             return
         }
     }

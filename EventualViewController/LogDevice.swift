@@ -1,5 +1,5 @@
 //
-//  EventualViewControllerLog.swift
+//  LogDevice.swift
 //  EventualViewController
 //
 //  Created by Hoon H. on 2017/05/14.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct EventualViewControllerLog {
+struct LogDevice {
     static func testAndLogWarningOnFailure(_ cond: @autoclosure () -> Bool, _ message: @autoclosure () -> String) {
         if cond() == false {
             logWarning(message())

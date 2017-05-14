@@ -1,5 +1,5 @@
 //
-//  EventualViewControllerLoopDevice.swift
+//  LoopDevice.swift
 //  EventualViewController
 //
 //  Created by Hoon H. on 2017/05/14.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-final class EventualViewControllerLoopDevice {
+final class LoopDevice {
     private let pr = Proxy()
     private let dl: CADisplayLink
     var step: () -> Void = {}

@@ -19,8 +19,32 @@ extension UIViewController {
         }
         return self
     }
+    @available(*, deprecated: 0.0.0)
     var rootViewControllerSafetyQuery: TransitionSafetyQuery {
-        return rootViewController as! TransitionSafetyQuery
+        return rootViewController as TransitionSafetyQuery
     }
 }
 
+extension UIViewController: TransitionSafetyQuery {
+    public var isSafeToParticipateInTransition: Bool {
+//        guard isBeingPresented == false else { return false }
+//        guard isBeingDismissed == false else { return false }
+//        guard isMovingToParentViewController == false else { return false }
+//        guard isMovingFromParentViewController == false else { return false }
+        guard transitionCoordinator == nil else { return false }
+        for vc in childViewControllers {
+            guard vc.isSafeToParticipateInTransition else { return false }
+        }
+        return true
+    }
+    public var isSafeToPresentModal: Bool {
+        guard presentedViewController == nil else { return false }
+        return isSafeToParticipateInTransition
+    }
+    public var isSafeToDismissModal: Bool {
+        guard let vc = presentedViewController else { return false }
+        guard vc.presentedViewController == nil else { return false }
+        return isSafeToParticipateInTransition
+    }
+
+}
