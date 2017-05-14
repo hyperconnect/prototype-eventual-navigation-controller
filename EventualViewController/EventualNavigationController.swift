@@ -9,51 +9,64 @@
 import Foundation
 import UIKit
 
-class EventualNavigationController: TSQNavigationController {
+public class EventualNavigationController: TSQNavigationController {
     private let loopDevice = EventualViewControllerLoopDevice()
     private var userInteractionBlocker: EventualViewControllerUserInteractionBlocker?
 
-    var state = State() {
-        didSet { loopDevice.isRunning = true }
-    }
-
     ///
-    /// User interaction will be disabled until all queued states
+    /// User interaction becomes disabled until all queued states
     /// to be consumed.
     ///
-    var queue = [State]() {
-        didSet { loopDevice.isRunning = true }
+    public var queue = [State]() {
+        didSet { resumeSyncLoop() }
     }
 
-    struct State: Equatable {
-        var modal: UIViewController?
-        var stack = [UIViewController]()
-
-        static func == (_ a: State, _ b: State) -> Bool {
+    public struct State: Equatable {
+        public var modal: UIViewController?
+        public var stack = [UIViewController]()
+        public init() {}
+        public init(modal: UIViewController?, stack: [UIViewController]) {
+            assert(modal == nil || modal! is TransitionSafetyQuery)
+            assert(stack.map({ $0 is TransitionSafetyQuery }).reduce(true, { $0 && $1 }))
+            self.modal = modal
+            self.stack = stack
+        }
+        public static func == (_ a: State, _ b: State) -> Bool {
             return a.modal === b.modal && a.stack == b.stack
         }
     }
 
-//    func scanState() -> State {
-//        return .init(modal: presentedViewController, stack: Array(viewControllers.dropFirst()))
-//    }
-
-    private func isArrivedToState() -> Bool {
-        return presentedViewController === state.modal && Array(viewControllers.dropFirst()) == state.stack
+    ///
+    /// Make and return navigation state by scanning current view state. 
+    ///
+    public func scan() -> State {
+        return .init(modal: presentedViewController, stack: Array(viewControllers.dropFirst()))
     }
-    private func step() {
+
+
+
+    private func hasArrivedToFinalState() -> Bool {
+        guard let fs = queue.first else { return true }
+        return scan() == fs
+    }
+
+    private func pauseSyncLoop() {
+        loopDevice.isRunning = false
+    }
+    private func resumeSyncLoop() {
+        loopDevice.isRunning = true
+    }
+    private func stepSyncLoop() {
         userInteractionBlocker = (userInteractionBlocker ?? EventualViewControllerUserInteractionBlocker())
-        while isArrivedToState() {
-            if let f = queue.first {
-                queue.removeFirst()
-                state = f
-            }
-            else {
-                loopDevice.isRunning = false
+        while hasArrivedToFinalState() {
+            guard queue.first != nil else {
+                pauseSyncLoop()
                 userInteractionBlocker = nil
                 return
             }
+            queue.removeFirst()
         }
+        guard let state = queue.first else { return }
 
         guard rootViewControllerSafetyQuery.isSafeToParticipateInTransition else { return }
         if state.modal !== presentedViewController {
@@ -79,17 +92,8 @@ class EventualNavigationController: TSQNavigationController {
         }
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-        loopDevice.step = { [weak self] in self?.step() }
-    }
-}
-
-private final class EventualViewControllerUserInteractionBlocker {
-    init() {
-        UIApplication.shared.beginIgnoringInteractionEvents()
-    }
-    deinit {
-        UIApplication.shared.endIgnoringInteractionEvents()
+        loopDevice.step = { [weak self] in self?.stepSyncLoop() }
     }
 }

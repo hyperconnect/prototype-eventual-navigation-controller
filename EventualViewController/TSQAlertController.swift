@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-class TSQAlertController: UIAlertController, TransitionSafetyQuery {
+public class TSQAlertController: UIAlertController, TransitionSafetyQuery {
     private var appearingState = TSQAppearingState.disappeared
 
-    var isSafeToParticipateInTransition: Bool {
+    public var isSafeToParticipateInTransition: Bool {
         guard transitionCoordinator == nil else { return false }
         switch appearingState {
         case .appeared, .disappeared:
@@ -21,26 +21,26 @@ class TSQAlertController: UIAlertController, TransitionSafetyQuery {
             return false
         }
     }
-    var isSafeToPresentModal: Bool {
+    public var isSafeToPresentModal: Bool {
         return false
     }
-    var isSafeToDismissModal: Bool {
+    public var isSafeToDismissModal: Bool {
         return false
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         appearingState = .appearing
         super.viewWillAppear(animated)
     }
-    override func viewDidAppear(_ animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         appearingState = .appeared
     }
-    override func viewWillDisappear(_ animated: Bool) {
+    public override func viewWillDisappear(_ animated: Bool) {
         appearingState = .disappearing
         super.viewWillDisappear(animated)
     }
-    override func viewDidDisappear(_ animated: Bool) {
+    public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         appearingState = .disappeared
     }

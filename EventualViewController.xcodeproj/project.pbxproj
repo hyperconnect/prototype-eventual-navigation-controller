@@ -20,6 +20,8 @@
 		45D72B881EC7942C000CE1DA /* TSQNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D72B871EC7942C000CE1DA /* TSQNavigationController.swift */; };
 		45D72B8A1EC7949D000CE1DA /* TSQViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D72B891EC7949D000CE1DA /* TSQViewController.swift */; };
 		45D72B8C1EC794DB000CE1DA /* TSQAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D72B8B1EC794DB000CE1DA /* TSQAlertController.swift */; };
+		45D72B8E1EC81EEC000CE1DA /* EventualViewControllerUserInteractionBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D72B8D1EC81EEC000CE1DA /* EventualViewControllerUserInteractionBlocker.swift */; };
+		45D72B921EC82594000CE1DA /* TSQTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D72B911EC82594000CE1DA /* TSQTabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		45D72B871EC7942C000CE1DA /* TSQNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSQNavigationController.swift; sourceTree = "<group>"; };
 		45D72B891EC7949D000CE1DA /* TSQViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSQViewController.swift; sourceTree = "<group>"; };
 		45D72B8B1EC794DB000CE1DA /* TSQAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSQAlertController.swift; sourceTree = "<group>"; };
+		45D72B8D1EC81EEC000CE1DA /* EventualViewControllerUserInteractionBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventualViewControllerUserInteractionBlocker.swift; sourceTree = "<group>"; };
+		45D72B911EC82594000CE1DA /* TSQTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSQTabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,10 +78,12 @@
 				45D72B771EC77BD0000CE1DA /* EventualNavigationController.swift */,
 				45D72B791EC77D00000CE1DA /* EventualViewControllerLoopDevice.swift */,
 				45D72B851EC784BE000CE1DA /* EventualViewControllerLog.swift */,
+				45D72B8D1EC81EEC000CE1DA /* EventualViewControllerUserInteractionBlocker.swift */,
 				45D72B7F1EC78352000CE1DA /* TransitionSafetyQuery.swift */,
 				45D72B8B1EC794DB000CE1DA /* TSQAlertController.swift */,
 				45D72B891EC7949D000CE1DA /* TSQViewController.swift */,
 				45D72B871EC7942C000CE1DA /* TSQNavigationController.swift */,
+				45D72B911EC82594000CE1DA /* TSQTabBarController.swift */,
 				45D72B7D1EC7833D000CE1DA /* TSQAppearingState.swift */,
 				45D72B811EC78362000CE1DA /* UIViewControllerExt.swift */,
 				45D72B6A1EC77A00000CE1DA /* Assets.xcassets */,
@@ -161,6 +167,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				45D72B641EC77A00000CE1DA /* AppDelegate.swift in Sources */,
+				45D72B8E1EC81EEC000CE1DA /* EventualViewControllerUserInteractionBlocker.swift in Sources */,
+				45D72B921EC82594000CE1DA /* TSQTabBarController.swift in Sources */,
 				45D72B821EC78362000CE1DA /* UIViewControllerExt.swift in Sources */,
 				45D72B7E1EC7833D000CE1DA /* TSQAppearingState.swift in Sources */,
 				45D72B7A1EC77D00000CE1DA /* EventualViewControllerLoopDevice.swift in Sources */,
