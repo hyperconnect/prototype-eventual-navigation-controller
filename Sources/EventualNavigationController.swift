@@ -11,13 +11,16 @@ import UIKit
 
 ///
 /// - Note:
+///     NC allows push/pop while a modal VC is presented.
+///
+/// - Note:
 ///     Take care that "0-view-controller in stack" is an abnormal
 ///     state for an NC, so it won't give you proper animations.
 ///     Anyway, it still work with no breakage.
 ///
 public class EventualNavigationController: UINavigationController {
     private let loopDevice = LoopDevice()
-    private var userInteractionBlocker: UserInteractionEventBlocker?
+    private var userInteractionBlocker: InteractionEventBlocker?
 
     ///
     /// User interaction becomes disabled until all queued states
@@ -66,7 +69,7 @@ public class EventualNavigationController: UINavigationController {
         loopDevice.isRunning = true
     }
     private func stepSyncLoop() {
-        userInteractionBlocker = (userInteractionBlocker ?? UserInteractionEventBlocker())
+        userInteractionBlocker = (userInteractionBlocker ?? InteractionEventBlocker())
         while hasArrivedToFinalState() {
             guard queue.first != nil else {
                 pauseSyncLoop()
@@ -80,7 +83,7 @@ public class EventualNavigationController: UINavigationController {
         guard rootViewControllerSafetyQuery.isSafeToParticipateInTransition else { return }
         if state.modal !== presentedViewController {
             if let vc = presentedViewController {
-                LogDevice.testAndLogWarningOnFailure(vc.presentingViewController == self, "There's a modal VC presented by other VC... Waiting for the VC to be dismissed...")
+                LogDevice.testAndLogWarningOnFailure(vc.presentingViewController == self, "There's a modal VC presented by other VC... Waiting for the VC to be dismissed... This is information to alert you this waiting...")
                 guard vc.presentingViewController == self else { return }
                 if isSafeToDismissModal {
                     dismiss(animated: true, completion: nil)

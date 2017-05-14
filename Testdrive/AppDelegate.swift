@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import EventualViewController
+import EonilEventualNavigationController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -53,23 +53,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    private func step(_ n: Int) {
-        switch n {
-        case 0:
-            break
-        case 1:
-            nc5.queue = [.init(modal: ac6, stack: [])]
-            break
-        case 2:
-            break
-        case 3:
-            break
-        case 4:
-            nc5.queue = [.init(modal: nil, stack: [])]
-            break
-
-        default:
-            preconditionFailure()
-        }
-    }
+//    private func step(_ n: Int) {
+//        switch n {
+//        case 0:
+//            break
+//        case 1:
+//            nc5.queue = [.init(modal: ac6, stack: [])]
+//            break
+//        case 2:
+//            break
+//        case 3:
+//            break
+//        case 4:
+//            nc5.queue = [.init(modal: nil, stack: [])]
+//            break
+//
+//        default:
+//            preconditionFailure()
+//        }
+//    }
 }

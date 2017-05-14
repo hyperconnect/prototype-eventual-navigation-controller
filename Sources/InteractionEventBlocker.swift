@@ -1,5 +1,5 @@
 //
-//  UserInteractionEventBlocker.swift
+//  InteractionEventBlocker.swift
 //  EventualViewController
 //
 //  Created by Hoon H. on 2017/05/14.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-final class UserInteractionEventBlocker {
+final class InteractionEventBlocker {
     init() {
         UIApplication.shared.beginIgnoringInteractionEvents()
     }

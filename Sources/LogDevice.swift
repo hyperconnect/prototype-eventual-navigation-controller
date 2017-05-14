@@ -15,6 +15,8 @@ struct LogDevice {
         }
     }
     static func logWarning(_ s: String) {
-
+        #if DEBUG
+        print(s)
+        #endif
     }
 }
