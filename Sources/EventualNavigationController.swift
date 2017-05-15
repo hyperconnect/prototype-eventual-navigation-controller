@@ -18,7 +18,7 @@ import UIKit
 ///     state for an NC, so it won't give you proper animations.
 ///     Anyway, it still work with no breakage.
 ///
-public class EventualNavigationController: UINavigationController {
+open class EventualNavigationController: UINavigationController {
     private let loopDevice = LoopDevice()
     private var userInteractionBlocker: InteractionEventBlocker?
 
@@ -26,7 +26,7 @@ public class EventualNavigationController: UINavigationController {
     /// User interaction becomes disabled until all queued states
     /// to be consumed.
     ///
-    public var queue = [State]() {
+    open var queue = [State]() {
         didSet { resumeSyncLoop() }
     }
 
@@ -51,7 +51,7 @@ public class EventualNavigationController: UINavigationController {
     ///
     /// Make and return navigation state by scanning current view state. 
     ///
-    public func scan() -> State {
+    open func scan() -> State {
         return .init(modal: presentedViewController, stack: viewControllers)
     }
 
@@ -104,7 +104,7 @@ public class EventualNavigationController: UINavigationController {
         }
     }
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         loopDevice.step = { [weak self] in self?.stepSyncLoop() }
     }
