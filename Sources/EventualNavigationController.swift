@@ -10,6 +10,16 @@ import Foundation
 import UIKit
 
 ///
+/// Provides eventual navigation by state sequence.
+///
+/// You set `queue` as you want, and this object will navigate
+/// sequentially through for each state in the queue with animations.
+///
+/// User interaction becomes disabled until all queued states
+/// to be consumed.
+///
+/// You can query current state from this object if needed.
+///
 /// - Note:
 ///     NC allows push/pop while a modal VC is presented.
 ///
@@ -23,8 +33,9 @@ open class EventualNavigationController: UINavigationController {
     private var userInteractionBlocker: InteractionEventBlocker?
 
     ///
-    /// User interaction becomes disabled until all queued states
-    /// to be consumed.
+    /// Sequence of planned states to navigate through.
+    ///
+    /// You can set this property at any time.
     ///
     open var queue = [State]() {
         didSet { resumeSyncLoop() }

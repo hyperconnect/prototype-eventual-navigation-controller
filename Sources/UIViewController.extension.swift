@@ -1,5 +1,5 @@
 //
-//  UIViewControllerExt.swift
+//  UIViewController.extension.swift
 //  EventualViewController
 //
 //  Created by Hoon H. on 2017/05/14.
@@ -18,10 +18,6 @@ extension UIViewController {
             return vc.rootViewController
         }
         return self
-    }
-    @available(*, deprecated: 0.0.0)
-    var rootViewControllerSafetyQuery: TransitionSafetyQuery {
-        return rootViewController as TransitionSafetyQuery
     }
 }
 
