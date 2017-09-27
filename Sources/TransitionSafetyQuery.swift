@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol TransitionSafetyQuery: class {
+protocol TransitionSafetyQuery: class {
     @nonobjc
     var isSafeToParticipateInTransition: Bool { get }
     @nonobjc
@@ -16,3 +16,4 @@ public protocol TransitionSafetyQuery: class {
     @nonobjc
     var isSafeToDismissModal: Bool { get }
 }
+

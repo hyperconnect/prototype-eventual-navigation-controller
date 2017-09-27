@@ -15,10 +15,23 @@ import UIKit
 /// You set `queue` as you want, and this object will navigate
 /// sequentially through for each state in the queue with animations.
 ///
+/// Switching to another state is done in single animation. For example,
+/// if you have 4 view-controllers in navigation-stack and next state has
+/// only 1, three view-controllers will be popped out in an animation.
+/// You can push three states to the `queue` if you want three-step animations.
+///
 /// User interaction becomes disabled until all queued states
 /// to be consumed.
 ///
 /// You can query current state from this object if needed.
+///
+/// - Note:
+///     UIKit does not support presentation and dismission of multiple
+///     modal view-controller at once with animation. It seems to be an
+///     intentional design, and I don't want to try to work around this.
+///     So this object cannot support presentation of multiple modal
+///     VCs in one-step. You are recommended to stack multiple instances of
+///     `EventualNavigationController` to present multiple modal VCs.
 ///
 /// - Note:
 ///     NC allows push/pop while a modal VC is presented.
@@ -43,14 +56,15 @@ open class EventualNavigationController: UINavigationController {
 
     public struct State: Equatable {
         public var modal: UIViewController?
-        public var stack = [UIViewController]()
+        public var navigation = [UIViewController]()
         public init() {}
-        public init(modal: UIViewController?, stack: [UIViewController]) {
+        public init(modal: UIViewController?, navigation: [UIViewController]) {
+            assertNonEmptyNavigationStack(navigation)
             self.modal = modal
-            self.stack = stack
+            self.navigation = navigation
         }
         public static func == (_ a: State, _ b: State) -> Bool {
-            return a.modal === b.modal && a.stack == b.stack
+            return a.modal === b.modal && a.navigation == b.navigation
         }
     }
 
@@ -63,12 +77,12 @@ open class EventualNavigationController: UINavigationController {
     /// Make and return navigation state by scanning current view state. 
     ///
     open func scan() -> State {
-        return .init(modal: presentedViewController, stack: viewControllers)
+        return .init(modal: presentedViewController, navigation: viewControllers)
     }
 
 
 
-    private func hasArrivedToFinalState() -> Bool {
+    private func hasArrivedToFirstState() -> Bool {
         guard let fs = queue.first else { return true }
         return scan() == fs
     }
@@ -80,9 +94,10 @@ open class EventualNavigationController: UINavigationController {
         loopDevice.isRunning = true
     }
     private func stepSyncLoop() {
+        assertNonEmptyNavigationStack(viewControllers)
         userInteractionBlocker = (userInteractionBlocker ?? InteractionEventBlocker())
-        while hasArrivedToFinalState() {
-            guard queue.first != nil else {
+        while hasArrivedToFirstState() {
+            if queue.isEmpty {
                 pauseSyncLoop()
                 userInteractionBlocker = nil
                 return
@@ -91,10 +106,10 @@ open class EventualNavigationController: UINavigationController {
         }
         guard let state = queue.first else { return }
 
-        guard rootViewControllerSafetyQuery.isSafeToParticipateInTransition else { return }
+        guard rootViewController.isSafeToParticipateInTransition else { return }
         if state.modal !== presentedViewController {
             if let vc = presentedViewController {
-                LogDevice.testAndLogWarningOnFailure(vc.presentingViewController == self, "There's a modal VC presented by other VC... Waiting for the VC to be dismissed... This is information to alert you this waiting...")
+                assert(vc.presentingViewController == self, "There's a modal VC presented by other VC... Waiting for the VC to be dismissed... This is information to alert you this waiting...")
                 guard vc.presentingViewController == self else { return }
                 if isSafeToDismissModal {
                     dismiss(animated: true, completion: nil)
@@ -109,8 +124,8 @@ open class EventualNavigationController: UINavigationController {
                 }
             }
         }
-        if state.stack != viewControllers {
-            setViewControllers(state.stack, animated: true)
+        if state.navigation != viewControllers {
+            setViewControllers(state.navigation, animated: true)
             return
         }
     }
@@ -119,4 +134,10 @@ open class EventualNavigationController: UINavigationController {
         super.viewDidLoad()
         loopDevice.step = { [weak self] in self?.stepSyncLoop() }
     }
+
 }
+
+private func assertNonEmptyNavigationStack(_ viewControllers: @autoclosure () -> [UIViewController]) {
+    assert(viewControllers().isEmpty == false, "Empty navigation stack may can produce view layout corruption. Do not make it empty.")
+}
+

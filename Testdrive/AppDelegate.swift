@@ -9,6 +9,18 @@
 import UIKit
 import EonilEventualNavigationController
 
+private final class AC1: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let v = UIView(frame: CGRect(x: 10, y: 10, width: 100, height: 100))
+        v.backgroundColor = UIColor.cyan
+        view.addSubview(v)
+    }
+    convenience init(title: String, message: String, preferredStyle: UIAlertControllerStyle) {
+        self.init()
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -30,17 +42,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         w.makeKeyAndVisible()
         w.rootViewController = nc
 
+        nc.viewControllers = [vc1, vc3]
         nc.queue = [
-            .init(modal: ac2, stack: []),
-            .init(modal: ac2, stack: [vc1]),
-            .init(modal: ac2, stack: [vc1, vc3]),
-            .init(modal: ac2, stack: []),
-            .init(modal: nil, stack: [vc3]),
-            .init(modal: nc5, stack: [vc3, vc1]),
-            .init(modal: nil, stack: [vc3, vc1]),
-            .init(modal: nil, stack: [vc3]),
-            .init(modal: nil, stack: []),
+            .init(modal: ac2, navigation: [vc1, vc3]),
+            .init(modal: ac2, navigation: [vc1]),
+            .init(modal: nil, navigation: [vc1]),
+            .init(modal: ac2, navigation: [vc1]),
+            .init(modal: nil, navigation: [vc1]),
+            .init(modal: ac2, navigation: [vc1]),
+            .init(modal: nil, navigation: [vc1]),
+            .init(modal: ac2, navigation: [vc1]),
+            .init(modal: nil, navigation: [vc1]),
+            .init(modal: ac2, navigation: [vc1]),
+            .init(modal: nil, navigation: [vc1]),
+            .init(modal: nil, navigation: [vc1, vc3]),
+//            .init(modal: ac2, navigation: [vc1, vc3]),
+//            .init(modal: ac2, navigation: []),
+//            .init(modal: nil, navigation: [vc3]),
+//            .init(modal: nc5, navigation: [vc3, vc1]),
+//            .init(modal: nil, navigation: [vc3, vc1]),
+//            .init(modal: nil, navigation: [vc3]),
+//            .init(modal: nil, navigation: []),
         ]
+
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
+//            guard let ss = self else { return }
+//            ss.nc5.queue = [
+//                .init(modal: ss.ac6, navigation: [])
+//            ]
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10)) { [weak self] in
+//            guard let ss = self else { return }
+//            ss.nc5.queue = [
+//                .init(modal: nil, navigation: [])
+//            ]
+//        }
 
 //        weak var ss = self
 //        let calls = { n in DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(n)) { ss?.step(n) } } as (Int) -> Void
